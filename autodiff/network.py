@@ -1,7 +1,7 @@
 import numpy as np
 from typing import TypedDict, List
-from layer import LayerParams, Layer
-from activation import Activation, get_activation
+from .layer import LayerParams, Layer
+from .activation import Activation, get_activation
 
 class NetworkParams(TypedDict):
     """Dict structure defining the required information to initialize a ff network"""
@@ -20,13 +20,13 @@ class Network:
     layers: List[Layer]
     
     def __init__(self, params: NetworkParams):
-        self.input_shape = params.input_shape
-        self.output_shape = params.output_shape
+        self.input_shape = params["input_shape"]
+        self.output_shape = params["output_shape"]
         self.layers = []
-        for layer_param in params.layers: 
+        for layer_param in params["layers"]: 
             self.layers.append(Layer(layer_param))
 
-        if params.prediction_type == "regression": 
+        if params["prediction_type"] == "regression": 
             self.output_activation = get_activation("linear")
         else: 
             self.output_activation = get_activation("Sigmoid")

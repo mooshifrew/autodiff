@@ -1,8 +1,8 @@
 import numpy as np
 from typing import TypedDict
 
-from activation import Activation, get_activation
-from config import GRAD_DTYPE, WEIGHT_DTYPE
+from .activation import Activation, get_activation
+from .config import GRAD_DTYPE, WEIGHT_DTYPE
 
 
 
@@ -30,15 +30,15 @@ class Layer:
     activation_func: Activation
 
     def __init__(self, params: LayerParams): 
-        self.input_shape = params.input_shape
-        self.n_neurons = params.n_neurons
+        self.input_shape = params["input_shape"]
+        self.n_neurons = params["n_neurons"]
 
         # TODO: check that weights are valid shape
-        self.w = np.array(params.weights_init, dtype=WEIGHT_DTYPE)
+        self.w = np.array(params["weights_init"], dtype=WEIGHT_DTYPE)
         # TODO: check that biases are valid shape
-        self.b = np.array(params.bias_init, dtype=WEIGHT_DTYPE)
+        self.b = np.array(params["bias_init"], dtype=WEIGHT_DTYPE)
 
-        self.activation_func = get_activation(params.activation)
+        self.activation_func = get_activation(params["activation"])
 
         # Neuron activations and parameter gradients 
         self.w_grads = np.zeros_like(self.w, dtype=GRAD_DTYPE)

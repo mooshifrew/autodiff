@@ -39,7 +39,7 @@ class ReLU(Activation):
         derivative[a<0] = 0
         return derivative
     
-    
+
 class Sigmoid(Activation):
     def activate(self, a: np.ndarray) -> np.ndarray:
         return 1/(1+np.exp(-a))
@@ -50,11 +50,11 @@ class Sigmoid(Activation):
 
 
 def get_activation(function: ActivationFunc) -> Activation: 
-    if function==ActivationFunc.LINEAR: 
+    if function==ActivationFunc.LINEAR.value: 
         return Linear()
-    elif function==ActivationFunc.RELU: 
+    elif function==ActivationFunc.RELU.value: 
         return ReLU()
-    elif function==ActivationFunc.SIGMOID: 
+    elif function==ActivationFunc.SIGMOID.value: 
         return Sigmoid()
     else: 
         raise Exception(f"Function: {function} is not valid.")
