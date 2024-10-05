@@ -53,15 +53,22 @@ class Network:
         """Backpropagates loss through the network
 
         Args:
-            delta (np.array): _description_
+            delta (np.array): the loss to propagate
         """
-        pass
+        for layer in reversed(self.layers):
+            delta = layer.backward(delta)
+        return
+    
+    def update_params(self):
+        """Update weights in each layer"""
+        for layer in self.layers: 
+            layer.update_params()
+        return
         
     def zero_grad(self): 
         """Set all gradients to zero"""
         for layer in self.layers: 
             layer.zero_grad()
-        pass
 
 
 

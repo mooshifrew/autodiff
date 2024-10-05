@@ -5,7 +5,6 @@ from .activation import Activation
 from .config import GRAD_DTYPE, WEIGHT_DTYPE
 
 
-
 class LayerParams(TypedDict):
     """Dict structure defining the required information to initialize a ff layer"""
     input_shape: int
@@ -26,7 +25,8 @@ class Layer:
     b: np.ndarray
     w_grads: np.ndarray
     b_grads: np.ndarray
-    activations: np.ndarray
+    activations: np.ndarray # A = W @ x + b
+    last_input: np.ndarray # (M, 1)
     activation_func: Activation
 
     def __init__(self, params: LayerParams): 
@@ -44,8 +44,9 @@ class Layer:
         self.w_grads = np.zeros_like(self.w, dtype=GRAD_DTYPE)
         self.b_grads = np.zeros_like(self.b, dtype=GRAD_DTYPE)
         self.activations = np.zeros(self.n_neurons, dtype=WEIGHT_DTYPE)
+        self.last_input = np.zeros(self.input_shape, dtype=WEIGHT_DTYPE)
 
-    def forward(self, input: np.array): 
+    def forward(self, input: np.ndarray): 
         """Propagates the input forward and records activations of each neuron
 
         Args:
@@ -61,20 +62,22 @@ class Layer:
         return self.activation_func.activate(self.activations)
     
 
-    def backward(self, delta: np.array):
+    def backward(self, delta: np.ndarray) -> np.ndarray:
         """Propagates loss (delta) backward and adds to the gradients of each param
         
         Args: 
-            delta: the errors from the proceeding layer
+            delta: the errors
             
         Returns: 
-            delta_pre: the errors to be passed back
+            delta_pre: the errors to pass back
         """
+        self.w_grads += delta @ self.last_input.T
+        self.b_grads += delta # treat this like another weight where the input is always 1
+
+        # get the delta to pass back
         g_prime = self.activation_func.derivate(self.activations)
-        delta = g_prime * self.w.T @ delta
-        
-        
-        pass
+        delta_pre = g_prime * self.w.T @ delta
+        return delta_pre
 
     
     def zero_grad(self): 
@@ -92,6 +95,9 @@ class Layer:
 
             w_updated = w - learning_rate * gradient
         """
+        self.w = self.w - learning_rate * self.w_grads
+        self.b = self.b - learning_rate * self.b_grads
+        return
     
 
     
