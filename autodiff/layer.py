@@ -1,7 +1,7 @@
 import numpy as np
 from typing import TypedDict
 
-from .activation import Activation, get_activation
+from .activation import Activation
 from .config import GRAD_DTYPE, WEIGHT_DTYPE
 
 
@@ -12,7 +12,7 @@ class LayerParams(TypedDict):
     n_neurons: int
     weight_init: np.ndarray
     bias_init: np.ndarray
-    activation: str
+    activation: Activation
 
 class Layer: 
     """Feedforward layer with support for auto-differentiation
@@ -38,7 +38,7 @@ class Layer:
         # TODO: check that biases are valid shape
         self.b = np.array(params["bias_init"], dtype=WEIGHT_DTYPE)
 
-        self.activation_func = get_activation(params["activation"])
+        self.activation_func = params["activation"]
 
         # Neuron activations and parameter gradients 
         self.w_grads = np.zeros_like(self.w, dtype=GRAD_DTYPE)

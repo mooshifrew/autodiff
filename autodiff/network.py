@@ -1,13 +1,18 @@
 import numpy as np
+from enum import Enum
 from typing import TypedDict, List
 from .layer import LayerParams, Layer
-from .activation import Activation, get_activation
+from .activation import Activation, Linear, ReLU, Sigmoid
+
+class PredictionType(Enum):
+    REGRESSION = "regression"
+    CLASSIFICATION = "classification"
 
 class NetworkParams(TypedDict):
     """Dict structure defining the required information to initialize a ff network"""
     input_shape: int
     output_shape: int
-    prediction_type: str # regression | classification
+    prediction_type: PredictionType # regression | classification
     layers: List[LayerParams]
 
 
@@ -26,10 +31,10 @@ class Network:
         for layer_param in params["layers"]: 
             self.layers.append(Layer(layer_param))
 
-        if params["prediction_type"] == "regression": 
-            self.output_activation = get_activation("linear")
+        if params["prediction_type"] == PredictionType.REGRESSION: 
+            self.output_activation = Linear()
         else: 
-            self.output_activation = get_activation("Sigmoid")
+            self.output_activation = Sigmoid()
 
 
     def forward(self, x: np.array):
