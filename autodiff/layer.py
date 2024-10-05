@@ -65,12 +65,15 @@ class Layer:
         """Propagates loss (delta) backward and adds to the gradients of each param
         
         Args: 
-            delta_pro: the errors from the proceeding layer
+            delta: the errors from the proceeding layer
             
         Returns: 
-            delta_pre: the errors of each neuron at the current layer
+            delta_pre: the errors to be passed back
         """
-
+        g_prime = self.activation_func.derivate(self.activations)
+        delta = g_prime * self.w.T @ delta
+        
+        
         pass
 
     

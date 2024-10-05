@@ -40,6 +40,7 @@ class Network:
         """
         for layer in self.layers: 
             x = layer.forward(x)
+            print(x)
         
         return x
 
