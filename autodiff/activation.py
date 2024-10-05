@@ -47,14 +47,3 @@ class Sigmoid(Activation):
     def derivate(self, a: np.ndarray) -> np.ndarray: 
         activate = self.activate(a)
         return activate * (1-activate)
-
-
-def get_activation(function: ActivationFunc) -> Activation: 
-    if function==ActivationFunc.LINEAR.value: 
-        return Linear()
-    elif function==ActivationFunc.RELU.value: 
-        return ReLU()
-    elif function==ActivationFunc.SIGMOID.value: 
-        return Sigmoid()
-    else: 
-        raise Exception(f"Function: {function} is not valid.")
