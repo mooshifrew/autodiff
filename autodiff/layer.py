@@ -50,7 +50,7 @@ class Layer:
         """Propagates the input forward and records activations of each neuron
 
         Args:
-            input (np.array): inputs to the neurons (M, 1)
+            input (np.array): inputs to the neurons (M,)
 
         Returns: 
             output (np.array): outputs from the neurons
@@ -58,6 +58,7 @@ class Layer:
         A = W @ x + b
         """
         # TODO: verify shapes
+        self.last_input = input
         self.activations = self.w @ input + self.b
         return self.activation_func.activate(self.activations)
     
@@ -71,7 +72,10 @@ class Layer:
         Returns: 
             delta_pre: the errors to pass back
         """
-        self.w_grads += delta @ self.last_input.T
+        # self.print_params()
+        # print(delta.shape)
+        cur_grad = np.outer(delta, self.last_input)
+        self.w_grads += cur_grad
         self.b_grads += delta # treat this like another weight where the input is always 1
 
         # get the delta to pass back
@@ -99,7 +103,12 @@ class Layer:
         self.b = self.b - learning_rate * self.b_grads
         return
     
-
-    
-
-    
+    def print_params(self):
+        print(f"Neurons:    {self.n_neurons}; Inputs: {self.input_shape}")
+        print(f"Weights:{self.w.shape} {self.w}")
+        print(f"Biases:{self.b.shape}  {self.b}")
+        print(f"W grads: {self.w_grads.shape} {self.w_grads}")
+        print(f"B grads: {self.b_grads.shape}   {self.b_grads}")
+        print(f"Activation: {self.activations}")
+        print(f"Last input: {self.last_input}")
+        return

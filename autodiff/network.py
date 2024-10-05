@@ -43,6 +43,7 @@ class Network:
         Args:
             x (np.array): input array
         """
+        x = np.array(x)
         for layer in self.layers: 
             x = layer.forward(x)
             print(x)
@@ -55,8 +56,10 @@ class Network:
         Args:
             delta (np.array): the loss to propagate
         """
+        print(delta)
         for layer in reversed(self.layers):
             delta = layer.backward(delta)
+            print(delta)
         return
     
     def update_params(self):
@@ -69,6 +72,16 @@ class Network:
         """Set all gradients to zero"""
         for layer in self.layers: 
             layer.zero_grad()
+
+    def print_params(self):
+        print(f"input_shape: {self.input_shape}")
+        print(f"output_shape: {self.output_shape}")
+        print(f"Num layers: {len(self.layers)}")
+        for i in range(len(self.layers)):
+            print()
+            print(f"Layer [{i}]")
+            self.layers[i].print_params() 
+            
 
 
 
