@@ -22,6 +22,7 @@ class Network:
     input_shape: int
     output_shape: int
     output_activation: Activation
+    learning_rate: float = 0.01
     layers: List[Layer]
     
     def __init__(self, params: NetworkParams):
@@ -65,7 +66,7 @@ class Network:
     def update_params(self):
         """Update weights in each layer"""
         for layer in self.layers: 
-            layer.update_params()
+            layer.update_params(self.learning_rate)
         return
         
     def zero_grad(self): 
