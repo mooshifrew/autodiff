@@ -36,7 +36,7 @@ class ReLU(Activation):
     
     def derivate(self, a: np.ndarray) -> np.ndarray: 
         derivative = np.ones_like(a)
-        derivative[a<0] = 0
+        derivative[a<=0] = 0
         return derivative
     
 
