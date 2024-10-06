@@ -62,10 +62,10 @@ class Network:
             print(delta)
         return
     
-    def update_params(self):
+    def update_params(self, learning_rate: float = 0.01):
         """Update weights in each layer"""
         for layer in self.layers: 
-            layer.update_params()
+            layer.update_params(learning_rate)
         return
         
     def zero_grad(self): 
@@ -73,14 +73,20 @@ class Network:
         for layer in self.layers: 
             layer.zero_grad()
 
-    def print_params(self):
+    def print_params(self, reverse: bool = False):
         print(f"input_shape: {self.input_shape}")
         print(f"output_shape: {self.output_shape}")
         print(f"Num layers: {len(self.layers)}")
-        for i in range(len(self.layers)):
-            print()
-            print(f"Layer [{i}]")
-            self.layers[i].print_params() 
+        if reverse: 
+            for i in reversed(range(len(self.layers))):
+                print()
+                print(f"Layer [{i}]")
+                self.layers[i].print_params() 
+        else: 
+            for i in range(len(self.layers)):
+                print()
+                print(f"Layer [{i}]")
+                self.layers[i].print_params() 
             
 
 
