@@ -37,7 +37,7 @@ class Network:
             self.output_activation = Sigmoid()
 
 
-    def forward(self, x: np.array):
+    def forward(self, x: np.array, print=False):
         """Propagates an input through the network and stores activations
 
         Args:
@@ -45,9 +45,7 @@ class Network:
         """
         x = np.array(x)
         for layer in self.layers: 
-            x = layer.forward(x)
-            print(x)
-        
+            x = layer.forward(x)        
         return x
 
     def backward(self, delta: np.array):
@@ -56,10 +54,8 @@ class Network:
         Args:
             delta (np.array): the loss to propagate
         """
-        print(delta)
         for layer in reversed(self.layers):
             delta = layer.backward(delta)
-            print(delta)
         return
     
     def update_params(self, learning_rate: float = 0.01):
