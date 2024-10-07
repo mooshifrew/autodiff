@@ -38,6 +38,9 @@ class Layer:
         # TODO: check that biases are valid shape
         self.b = np.array(params["bias_init"], dtype=WEIGHT_DTYPE)
 
+        assert self.w.shape == (self.n_neurons, self.input_shape), "weights wrong dim"
+        assert self.b.shape == (self.n_neurons,), "biases wrong dim"
+
         self.activation_func = params["activation"]
 
         # Neuron activations and parameter gradients 
@@ -71,16 +74,21 @@ class Layer:
             
         Returns: 
             delta_pre: the errors to pass back
+
+        dL/dw = dL/dz  dz/da  da/dw (N,M)
+        dL/dz = delta (N,)
+        dz/da = g_prime (N,)
+        da/dw = last_input (M,)
         """
-        # self.print_params()
-        # print(delta.shape)
-        cur_grad = np.outer(delta, self.last_input)
-        self.w_grads += cur_grad
-        self.b_grads += delta # treat this like another weight where the input is always 1
+
+        g_prime = self.activation_func.derivate(self.activations)
+        w_grad_update = np.outer(delta * g_prime, self.last_input)
+        b_grad_update = delta * g_prime # treat this like another weight where the input is always 1
+        self.w_grads += w_grad_update
+        self.b_grads += b_grad_update
 
         # get the delta to pass back
-        g_prime = self.activation_func.derivate(self.activations)
-        delta_pre = g_prime * self.w.T @ delta
+        delta_pre = self.w.T @ (g_prime * delta)
         return delta_pre
 
     
