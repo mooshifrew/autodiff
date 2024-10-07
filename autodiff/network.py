@@ -58,10 +58,10 @@ class Network:
             delta = layer.backward(delta)
         return
     
-    def update_params(self, learning_rate: float = 0.01):
+    def update_params(self, learning_rate: float, batch_size: int ):
         """Update weights in each layer"""
         for layer in self.layers: 
-            layer.update_params(learning_rate)
+            layer.update_params(learning_rate, batch_size)
         return
         
     def zero_grad(self): 

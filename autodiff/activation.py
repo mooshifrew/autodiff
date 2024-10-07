@@ -25,18 +25,17 @@ class Linear(Activation):
     def activate(self, a: np.ndarray) -> np.ndarray:
         return a 
     
-    def derivate(self, a: np.ndarray) -> np.ndarray: 
+    def derivate(self, a: np.ndarray) -> np.ndarray:
+        print('LINEAR') 
         return np.ones_like(a)
 
 
 class ReLU(Activation): 
     def activate(self, a: np.ndarray) -> np.ndarray:
-        a[a<0] = 0
-        return a
+        return np.maximum(0, a)
     
     def derivate(self, a: np.ndarray) -> np.ndarray: 
-        derivative = np.ones_like(a)
-        derivative[a<=0] = 0
+        derivative = np.where(a > 0, 1, 0)
         return derivative
     
 
@@ -45,5 +44,6 @@ class Sigmoid(Activation):
         return 1/(1+np.exp(-a))
     
     def derivate(self, a: np.ndarray) -> np.ndarray: 
+        print('SIGMOID')
         activate = self.activate(a)
         return activate * (1-activate)

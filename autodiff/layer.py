@@ -34,7 +34,7 @@ class Layer:
         self.n_neurons = params["n_neurons"]
 
         # TODO: check that weights are valid shape
-        self.w = np.array(params["weights_init"], dtype=WEIGHT_DTYPE)
+        self.w = np.array(params["weight_init"], dtype=WEIGHT_DTYPE)
         # TODO: check that biases are valid shape
         self.b = np.array(params["bias_init"], dtype=WEIGHT_DTYPE)
 
@@ -82,7 +82,9 @@ class Layer:
         """
 
         g_prime = self.activation_func.derivate(self.activations)
+        print(f'g_prime: {g_prime}')
         w_grad_update = np.outer(delta * g_prime, self.last_input)
+        print(f'w_grad_update: {w_grad_update}')
         b_grad_update = delta * g_prime # treat this like another weight where the input is always 1
         self.w_grads += w_grad_update
         self.b_grads += b_grad_update
@@ -99,17 +101,10 @@ class Layer:
         return
     
 
-    def update_params(self, learning_rate: float): 
-        """Perform a weight update with the given learning rate
+    def update_params(self, learning_rate: float, batch_size: int): 
+        self.w -= learning_rate * (self.w_grads / batch_size)
+        self.b -= learning_rate * (self.b_grads / batch_size)
 
-        Args:
-            learning_rate (float): the amount to update the weights
-
-            w_updated = w - learning_rate * gradient
-        """
-        self.w = self.w - learning_rate * self.w_grads
-        self.b = self.b - learning_rate * self.b_grads
-        return
     
     def print_params(self):
         print(f"Neurons:    {self.n_neurons}; Inputs: {self.input_shape}")
