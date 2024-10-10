@@ -62,13 +62,15 @@ def create_network(config: dict, weights:dict):
     return network
     
 
-def plot_results(loss_vals):
-    plt.plot(loss_vals)
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.title('Loss vs Epochs')
+def plot_results(loss_vals: list, config: dict):
+    epochs = config['TRAIN']['EPOCH']
+
+    plt.plot(range(epochs), loss_vals)
+    plt.title('Training Loss Curve')
+    plt.xlabel('Epoch')
+    plt.ylabel('Average Loss')
+    plt.grid(True)
     plt.show()
-    return
     
 
 def train_network(config: dict, network: Network, data: dict):
@@ -87,8 +89,8 @@ def train_network(config: dict, network: Network, data: dict):
             current_loss += loss
             
             network.backward(y_pred - y)
-        print(f"EPOCH: {iteration}, LOSS: {current_loss}")
 
+    print(f'Epoch {iteration+1}/{epoch}, Loss: {current_loss/len(data["inputs"])}')
     network.update_params(learning_rate=lr, data_length=len(data))
     loss_vals.append(current_loss/len(data["inputs"]))
     return loss_vals
@@ -105,8 +107,7 @@ def train_pytorch_network(data: dict, config: dict):
     model = SimpleNet()
     set_model_weights(data, model)
 
-    def get_loss(y, y_hat):
-        return 0.5 * ((y_hat - y) ** 2).mean()
+    criterion = nn.MSELoss()
     
     optimizer = optim.SGD(model.parameters(), lr=lr)
 
@@ -120,7 +121,7 @@ def train_pytorch_network(data: dict, config: dict):
 
             # Forward pass
             output = model(input_data)
-            loss = get_loss(output, target_data)
+            loss = criterion(output, target_data)/2
             epoch_loss += loss.item()
             
             # Accumulate gradients
@@ -134,6 +135,8 @@ def train_pytorch_network(data: dict, config: dict):
         loss_vals.append(avg_loss)
 
         print(f'Epoch {epoch+1}/{epochs}, Loss: {avg_loss}')
+
+    return loss_vals
 
         
 
