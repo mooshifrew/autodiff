@@ -82,12 +82,11 @@ class Layer:
         """
 
         g_prime = self.activation_func.derivate(self.activations)
-        print(f'g_prime: {g_prime}')
         w_grad_update = np.outer(delta * g_prime, self.last_input)
-        print(f'w_grad_update: {w_grad_update}')
         b_grad_update = delta * g_prime # treat this like another weight where the input is always 1
         self.w_grads += w_grad_update
         self.b_grads += b_grad_update
+        print(self.w_grads)
 
         # get the delta to pass back
         delta_pre = self.w.T @ (g_prime * delta)
