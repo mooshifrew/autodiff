@@ -24,7 +24,7 @@ class Network:
         for layer_param in params["layers"]: 
             self.layers.append(Layer(layer_param))
 
-    def forward(self, x: np.array, print=False):
+    def forward(self, x: np.array):
         """Propagates an input through the network and stores activations
 
         Args:

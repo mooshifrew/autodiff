@@ -33,9 +33,7 @@ class Layer:
         self.input_shape = params["input_shape"]
         self.n_neurons = params["n_neurons"]
 
-        # TODO: check that weights are valid shape
         self.w = np.array(params["weight_init"], dtype=WEIGHT_DTYPE)
-        # TODO: check that biases are valid shape
         self.b = np.array(params["bias_init"], dtype=WEIGHT_DTYPE)
 
         assert self.w.shape == (self.n_neurons, self.input_shape), "weights wrong dim"
@@ -82,9 +80,7 @@ class Layer:
         """
 
         g_prime = self.activation_func.derivate(self.activations)
-        print(f'g_prime: {g_prime}')
         w_grad_update = np.outer(delta * g_prime, self.last_input)
-        print(f'w_grad_update: {w_grad_update}')
         b_grad_update = delta * g_prime # treat this like another weight where the input is always 1
         self.w_grads += w_grad_update
         self.b_grads += b_grad_update
