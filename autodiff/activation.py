@@ -26,7 +26,6 @@ class Linear(Activation):
         return a 
     
     def derivate(self, a: np.ndarray) -> np.ndarray:
-        print('LINEAR') 
         return np.ones_like(a)
 
 
@@ -44,6 +43,5 @@ class Sigmoid(Activation):
         return 1/(1+np.exp(-a))
     
     def derivate(self, a: np.ndarray) -> np.ndarray: 
-        print('SIGMOID')
         activate = self.activate(a)
         return activate * (1-activate)
