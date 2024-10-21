@@ -1,0 +1,10 @@
+NETWORK:
+  INPUT_SHAPE: 2 # int
+  OUTPUT_SHAPE: 1 # int 
+  ACTIVATION: ReLU # Activation: Linear, ReLU, Sigmoid
+  IS_REGRESSION: True # bool: True or False
+
+TRAIN:
+  EPOCH: 5 # int 
+  LR: 0.01 # float 
+
