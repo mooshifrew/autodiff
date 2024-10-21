@@ -2,14 +2,12 @@ import torch
 import torch.nn as nn
 
 class SimpleNet(nn.Module):
-    def __init__(self, data):
+    def __init__(self):
         super(SimpleNet, self).__init__()
         self.fc1 = nn.Linear(2, 10, dtype=torch.float64)
         self.fc2 = nn.Linear(10, 10, dtype=torch.float64)
         self.fc3 = nn.Linear(10, 1, dtype=torch.float64)
         self.relu = nn.ReLU()
-
-
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
@@ -20,7 +18,6 @@ class SimpleNet(nn.Module):
     def print_gradient(self):
         pass
 
-    
     
 def set_model_weights(data: dict, model: nn.Module):
 

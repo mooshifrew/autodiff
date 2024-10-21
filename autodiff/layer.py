@@ -1,8 +1,8 @@
 import numpy as np
 from typing import TypedDict
 
-from .activation import Activation
-from .config import GRAD_DTYPE, WEIGHT_DTYPE
+from activation import Activation
+from config import GRAD_DTYPE, WEIGHT_DTYPE
 
 
 class LayerParams(TypedDict):
@@ -86,7 +86,7 @@ class Layer:
         b_grad_update = delta * g_prime # treat this like another weight where the input is always 1
         self.w_grads += w_grad_update
         self.b_grads += b_grad_update
-        print(self.w_grads)
+
 
         # get the delta to pass back
         delta_pre = self.w.T @ (g_prime * delta)

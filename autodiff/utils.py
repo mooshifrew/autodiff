@@ -3,60 +3,67 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import numpy as np
+import yaml
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import pickle as pkl
 
-from activation import *
-from network import *
+
+from activation import ReLU, Sigmoid, Linear, Activation
+from network import Network, PredictionType, NetworkParams
 from model import SimpleNet, set_model_weights
 
-def loss_fn(y_pred,y_label):
-    '''
-    
-    '''
-    loss = 0.5*((y_pred - y_label)**2)
+def loss_fn(y, y_hat): 
+    return 0.5*((y_hat - y)**2)
 
-    return loss
-
-def create_network(config: dict, weights:dict):
+def create_network(data: dict, config: dict):
     input_shape:int = config['NETWORK']['INPUT_SHAPE']
     output_shape:int  = config['NETWORK']['OUTPUT_SHAPE']
-    activation: Activation = config['NETWORK']['ACTIVATION']
+    activation_name: str = config['NETWORK']['ACTIVATION']
     is_regression: bool = config['NETWORK']['IS_REGRESSION']
 
-    if is_regression == True:
-        classifaction_type: Activation = Linear
+    if activation_name.lower() == 'relu':
+        activation: Activation =  ReLU()
+    elif activation_name.lower() == 'linear':
+        activation: Activation =  Linear()
+    elif activation_name.lower() == 'sigmoid':
+        activation: Activation =  Sigmoid()
     else:
-        classifaction_type: Activation = ReLU
+        raise ('Enter a valid activation function')
+
+    if is_regression == True:
+        classifaction_type: Activation = Linear()
+    else:
+        classifaction_type: Activation = Sigmoid()
 
     network_def: NetworkParams = {
-        "input_shape":input_shape ,
+        "input_shape": input_shape,
         "output_shape": output_shape,
+        "prediction_type": PredictionType.REGRESSION,
         "layers": [
             {
                 "input_shape": 2,
-                "n_neurons": len(weights['w1']),
-                "weight_init": weights['w1'],
-                "bias_init": weights['b1'] ,
+                "n_neurons": len(data['w1']),
+                "weight_init": data['w1'],
+                "bias_init": data['b1'] ,
                 "activation": activation,
             },
             {
-                "input_shape": len(weights['w1']),
-                "n_neurons": len(weights['w2']),
-                "weight_init": weights['w2'],
-                "bias_init": weights['b2'] ,
+                "input_shape": len(data['w1']),
+                "n_neurons": len(data['w2']),
+                "weight_init": data['w2'],
+                "bias_init": data['b2'] ,
                 "activation": activation,
             },
             {
-                "input_shape": len(weights['w2']),
-                "n_neurons": len(weights['w3']),
-                "weight_init": weights['w3'],
-                "bias_init": weights['b3'] ,
+                "input_shape": len(data['w2']),
+                "n_neurons": len(data['w3']),
+                "weight_init": data['w3'],
+                "bias_init": data['b3'] ,
                 "activation": classifaction_type, 
             }
         ]
     } 
-
     network = Network(network_def)
 
     return network
@@ -64,6 +71,7 @@ def create_network(config: dict, weights:dict):
 
 def plot_results(loss_vals: list, config: dict):
     epochs = config['TRAIN']['EPOCH']
+    print(loss_vals)
 
     plt.plot(range(epochs), loss_vals)
     plt.title('Training Loss Curve')
@@ -73,16 +81,17 @@ def plot_results(loss_vals: list, config: dict):
     plt.show()
     
 
-def train_network(config: dict, network: Network, data: dict):
+def train_network( network: Network, data: dict,config: dict):
     epoch = config['TRAIN']['EPOCH']
     lr = config['TRAIN']['LR']
     
     loss_vals = []
 
     for iteration in range(epoch): 
+
         current_loss = 0
         network.zero_grad()
-        for index, input in tqdm(data['inputs']):
+        for index, input in enumerate(data['inputs']):
             y_pred = network.forward(input)
             y = data['targets'][index] 
             loss = loss_fn(y, y_pred)
@@ -90,10 +99,11 @@ def train_network(config: dict, network: Network, data: dict):
             
             network.backward(y_pred - y)
 
-    print(f'Epoch {iteration+1}/{epoch}, Loss: {current_loss/len(data["inputs"])}')
-    network.update_params(learning_rate=lr, data_length=len(data))
-    loss_vals.append(current_loss/len(data["inputs"]))
+        print(f'Epoch {iteration+1}/{epoch}, Loss: {(current_loss/len(data["inputs"]))[0]}')
+        network.update_params(lr, len(data))
+        loss_vals.append(current_loss/len(data["inputs"]))
     return loss_vals
+
 
 def train_pytorch_network(data: dict, config: dict):
     epochs = config['TRAIN']['EPOCH']
@@ -143,5 +153,16 @@ def train_pytorch_network(data: dict, config: dict):
 def compare_results():
     pass
     
+if __name__ == '__main__':
+    file_path = 'assignment-one-test-parameters.pkl'
+
+    with open(file_path, 'rb') as file:
+        data = pkl.load(file)
+
+    config_path = '/Users/ciceku/Desktop/untitled folder/autodiff/config.yaml'
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+
+    train_pytorch_network(data,config)
 
 

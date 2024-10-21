@@ -1,8 +1,8 @@
 import numpy as np
 from enum import Enum
 from typing import TypedDict, List
-from .layer import LayerParams, Layer
-from .activation import Activation, Linear, ReLU, Sigmoid
+from layer import LayerParams, Layer
+from activation import Activation, Linear, ReLU, Sigmoid
 
 class PredictionType(Enum):
     REGRESSION = "regression"
