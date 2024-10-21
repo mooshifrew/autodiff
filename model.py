@@ -15,8 +15,21 @@ class SimpleNet(nn.Module):
         x = self.fc3(x)
         return x
     
-    def print_gradient(self):
-        pass
+    def get_gradients(self):
+        gradients = {
+            'fc1_weight_grad': self.fc1.weight.grad,
+            'fc2_weight_grad': self.fc2.weight.grad,
+            'fc3_weight_grad': self.fc3.weight.grad,
+            'fc1_bias_grad': self.fc1.bias.grad,
+            'fc2_bias_grad': self.fc2.bias.grad,
+            'fc3_bias_grad': self.fc3.bias.grad
+        }
+
+        # Print the gradients in the specified order
+        for key in ['fc1_weight_grad','fc1_bias_grad']:
+            print(f"{key}: {gradients[key]}")
+
+        return gradients['fc1_weight_grad'], gradients['fc1_bias_grad']
 
     
 def set_model_weights(data: dict, model: nn.Module):
