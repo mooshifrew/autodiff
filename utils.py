@@ -123,35 +123,23 @@ def train_pytorch_network(data: dict, config: dict):
 
     for epoch in range(epochs):
         optimizer.zero_grad()
-        epoch_loss = 0.0
-        
-        for i in range(len(inputs)):
-            input_data = inputs[i]
-            target_data = targets[i]
 
-            # Forward pass
-            output = model(input_data)
-            loss = criterion(output, target_data)/2
-            epoch_loss += loss.item()
-            
-            # Accumulate gradients
-            loss.backward()
+        # Forward pass
+        output = model(inputs)
+        loss = criterion(output.squeeze(), targets)/2
+
+        # Accumulate gradients
+        loss.backward()
 
         # Perform a single parameter update after accumulating gradients
         optimizer.step()
-        
-        # Average loss for the epoch
-        avg_loss = epoch_loss / len(inputs)
-        loss_vals.append(avg_loss)
 
-        print(f'Epoch {epoch+1}/{epochs}, Loss: {avg_loss}')
+        loss_vals.append(loss)
+
+        print(f'Epoch {epoch+1}/{epochs}: {loss}')
 
     return loss_vals
 
-        
-
-def compare_results():
-    pass
     
 if __name__ == '__main__':
     file_path = DATA_PATH
