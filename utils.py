@@ -69,7 +69,7 @@ def create_network(data: dict, config: dict):
     return network
     
 
-def plot_results(loss_vals: list, config: dict):
+def plot_results_torch(loss_vals: list, config: dict):
     epochs = config['TRAIN']['EPOCH']
     print(loss_vals)
 
@@ -79,7 +79,17 @@ def plot_results(loss_vals: list, config: dict):
     plt.ylabel('Average Loss')
     plt.grid(True)
     plt.show()
-    
+
+def plot_results(loss_vals: list, config: dict):
+    epochs = config['TRAIN']['EPOCH']
+    print(loss_vals)
+
+    plt.plot(range(epochs), [elem for elem in loss_vals])
+    plt.title('Custom Training Loss Curve')
+    plt.xlabel('Epoch')
+    plt.ylabel('Average Loss')
+    plt.grid(True)
+    plt.show()
 
 def train_network( network: Network, data: dict,config: dict):
     epoch = config['TRAIN']['EPOCH']

@@ -5,6 +5,6 @@ NETWORK:
   IS_REGRESSION: True # bool: True or False
 
 TRAIN:
-  EPOCH: 5 # int 
+  EPOCH: 6 # int 
   LR: 0.01 # float 
 
