@@ -4,7 +4,7 @@ layer.py: layer class code
 config.py: datatypes
 config.yaml: configuration file
 model.py: Pytorch model definition
-test.py: custom model and pytorch model testing
+test_torch.py: custom model and pytorch model testing
 utils.py: utility functions
 activation.py: activation function classes code
 
