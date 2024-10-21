@@ -73,8 +73,8 @@ def plot_results(loss_vals: list, config: dict):
     epochs = config['TRAIN']['EPOCH']
     print(loss_vals)
 
-    plt.plot(range(epochs), loss_vals)
-    plt.title('Training Loss Curve')
+    plt.plot(range(epochs), [elem.detach().numpy() for elem in loss_vals])
+    plt.title('Pytorch Training Loss Curve')
     plt.xlabel('Epoch')
     plt.ylabel('Average Loss')
     plt.grid(True)
